@@ -35,7 +35,7 @@ $headersRequest = @{
   "token" = "{""version"":""v2.1.0"",""client"":""android"",""language"":""en"",""timestamp"":""$($TokenRequest.data.timestamp)"",""uid"":""$($TokenRequest.data.uid)"",""token"":""$($TokenRequest.data.token)""}"
 }
 #Prepare the body for the request
-$RequestBody = @{powerStationId="e6fee399-9205-458b-9b01-4b8d2f95a904"}
+$RequestBody = @{powerStationId="11111111-aaaa-bbbb-cccc-222222333333"}
 
 #Make the request
 $Request = (Invoke-WebRequest -Uri "$($url)$($urlRequest)" -Headers $headersRequest -Method Post -Body $RequestBody -UseBasicParsing).Content | ConvertFrom-Json
