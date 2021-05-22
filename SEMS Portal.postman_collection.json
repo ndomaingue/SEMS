@@ -1,0 +1,165 @@
+{
+	"info": {
+		"_postman_id": "bedc3a38-ee99-446d-822c-37025f7702df",
+		"name": "SEMS Portal",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get New Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"IsSuccess\", function () {\r",
+							"    pm.expect(jsonData.msg).to.eql(\"Success\");\r",
+							"});\r",
+							"\r",
+							"pm.collectionVariables.set(\"tokenTimestamp\", jsonData.data.timestamp)\r",
+							"pm.collectionVariables.set(\"tokenUID\", jsonData.data.uid)\r",
+							"pm.collectionVariables.set(\"tokenToken\", jsonData.data.token)\r",
+							"\r",
+							"console.log(\"---- Retrieved Timestamp: \" + jsonData.data.timestamp + \", with UID: \" + jsonData.data.uid)\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true,
+					"accept-encoding": true,
+					"connection": true,
+					"user-agent": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Token",
+						"value": "{\"version\":\"v2.1.0\",\"client\":\"android\",\"language\":\"en\"}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"account\":\"{{sems_account}}\",\r\n    \"pwd\":\"{{sems_pwd}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://www.semsportal.com/api/v1/Common/CrossLogin",
+					"protocol": "https",
+					"host": [
+						"www",
+						"semsportal",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"Common",
+						"CrossLogin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"IsSuccess\", function () {\r",
+							"    pm.expect(jsonData.msg).to.eql(\"success\");\r",
+							"});\r",
+							"\r",
+							"pm.variables.set(\"daily_generation\", jsonData.data.inverter[0].daily_generation)\r",
+							"\r",
+							"console.log(\"-- Today's generation so far= \" + pm.variables.get(\"daily_generation\"))\r",
+							"//console.log(\"-- Today's generation so far= \" + jsonData.data.inverter.daily_generation)\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"user-agent": true,
+					"accept-encoding": true,
+					"accept": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{\"version\":\"v2.1.0\",\"client\":\"android\",\"language\":\"en\",\"timestamp\":{{tokenTimestamp}},\"uid\":\"{{tokenUID}}\",\"token\":\"{{tokenToken}}\"}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"powerStationId\":\"{{sems_powerstation_id}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://eu.semsportal.com/api/v1/PowerStation/GetMonitorDetailByPowerstationId",
+					"protocol": "https",
+					"host": [
+						"eu",
+						"semsportal",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"PowerStation",
+						"GetMonitorDetailByPowerstationId"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "tokenTimestamp",
+			"value": ""
+		},
+		{
+			"key": "tokenUID",
+			"value": ""
+		},
+		{
+			"key": "tokenToken",
+			"value": ""
+		}
+	]
+}
